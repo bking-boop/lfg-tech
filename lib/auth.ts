@@ -1,8 +1,15 @@
-import { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import { SignJWT, jwtVerify } from 'jose';
+import { cookies } from 'next/headers';
 
-// In production replace this with a real database + bcrypt hashed passwords
-const DEMO_USERS = [
+const SECRET = new TextEncoder().encode(
+  process.env.NEXTAUTH_SECRET ?? 'fallback-dev-secret-change-in-prod'
+);
+
+const COOKIE_NAME = 'lfg_session';
+
+// ── User store ───────────────────────────────────────────────
+// Replace with a real database query in production
+export const USERS = [
   {
     id: 'client-001',
     email: 'demo@lfgtech.com',
@@ -13,57 +20,38 @@ const DEMO_USERS = [
   },
 ];
 
-export const authOptions: NextAuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+export interface SessionUser {
+  id: string;
+  email: string;
+  name: string;
+  company: string;
+  qboCustomerId: string;
+}
 
-        const user = DEMO_USERS.find(
-          (u) => u.email.toLowerCase() === credentials.email.toLowerCase()
-        );
-        if (!user) return null;
+// ── Token helpers ─────────────────────────────────────────────
+export async function createToken(user: SessionUser): Promise<string> {
+  return new SignJWT({ ...user })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(SECRET);
+}
 
-        const valid = credentials.password === user.password;
-        if (!valid) return null;
+export async function verifyToken(token: string): Promise<SessionUser | null> {
+  try {
+    const { payload } = await jwtVerify(token, SECRET);
+    return payload as unknown as SessionUser;
+  } catch {
+    return null;
+  }
+}
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          company: user.company,
-          qboCustomerId: user.qboCustomerId,
-        } as never;
-      },
-    }),
-  ],
-  session: { strategy: 'jwt' },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = (user as never as { id: string }).id;
-        token.company = (user as never as { company: string }).company;
-        token.qboCustomerId = (user as never as { qboCustomerId: string }).qboCustomerId;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        (session.user as never as { id: string }).id = token.id as string;
-        (session.user as never as { company: string }).company = token.company as string;
-        (session.user as never as { qboCustomerId: string }).qboCustomerId = token.qboCustomerId as string;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: '/portal/login',
-    error: '/portal/login',
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-};
+// ── Session helpers (server-side) ─────────────────────────────
+export async function getSession(): Promise<SessionUser | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (!token) return null;
+  return verifyToken(token);
+}
+
+export { COOKIE_NAME };

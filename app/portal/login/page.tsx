@@ -1,7 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,40 +22,43 @@ function LoginForm() {
     setLoading(true);
     setError('');
 
-    const res = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-      callbackUrl,
-    });
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setLoading(false);
-    if (res?.ok) {
-      router.push(callbackUrl);
-    } else {
-      setError('Invalid email or password.');
+      if (res.ok) {
+        router.push(callbackUrl);
+        router.refresh();
+      } else {
+        const data = await res.json();
+        setError(data.error ?? 'Invalid email or password.');
+      }
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold text-white mb-2 text-center">Client Portal</h2>
-      <p className="text-brand-muted text-sm text-center mb-6">Sign in to view invoices and manage payments</p>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-extrabold text-white mb-1">Client Portal</h1>
+        <p className="text-brand-muted text-sm">Sign in to view invoices and manage payments</p>
+      </div>
 
-      {/* Demo hint */}
       <div className="p-3 rounded-lg bg-brand-surface border border-brand-border text-xs text-brand-muted">
         <span className="text-brand-cyan font-semibold">Demo: </span>
         demo@lfgtech.com / demo1234
       </div>
 
       <div>
-        <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">
-          Email Address
-        </label>
+        <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">Email</label>
         <input
-          type="email"
-          required
-          value={email}
+          type="email" required value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
           className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5 text-white text-sm placeholder-brand-muted focus:outline-none focus:border-brand-cyan/60 transition-colors"
@@ -64,76 +66,54 @@ function LoginForm() {
       </div>
 
       <div>
-        <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">
-          Password
-        </label>
+        <label className="block text-xs font-semibold text-brand-muted mb-1.5 uppercase tracking-wider">Password</label>
         <div className="relative">
           <input
-            type={showPw ? 'text' : 'password'}
-            required
-            value={password}
+            type={showPw ? 'text' : 'password'} required value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5 pr-10 text-white text-sm placeholder-brand-muted focus:outline-none focus:border-brand-cyan/60 transition-colors"
           />
-          <button
-            type="button"
-            onClick={() => setShowPw(!showPw)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-white transition-colors"
-          >
+          <button type="button" onClick={() => setShowPw(!showPw)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-white transition-colors">
             {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">{error}</div>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-sm hover:bg-white transition-colors disabled:opacity-60 mt-2"
-      >
+      <button type="submit" disabled={loading}
+        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-brand-cyan text-brand-bg font-bold text-sm hover:bg-white transition-colors disabled:opacity-60">
         {loading ? 'Signing in…' : 'Sign In'}
         {!loading && <LogIn className="w-4 h-4" />}
       </button>
 
-      <div className="text-center text-xs text-brand-muted pt-2">
+      <p className="text-center text-xs text-brand-muted pt-1">
         Need access?{' '}
         <Link href="/contact" className="text-brand-cyan hover:text-white transition-colors">
           Contact your account manager
         </Link>
-      </div>
+      </p>
     </form>
   );
 }
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-brand-bg grid-pattern flex items-center justify-center px-4">
+    <div className="min-h-screen bg-brand-bg grid-bg flex items-center justify-center px-4">
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl pointer-events-none" />
-
       <div className="relative w-full max-w-md">
         <Link href="/" className="flex justify-center mb-8">
-          <Image
-            src="/logo-white.png"
-            alt="LFG Technology Consultants"
-            width={200}
-            height={67}
-            className="h-12 w-auto object-contain"
-            priority
-          />
+          <Image src="/logo-white.png" alt="LFG Technology Consultants" width={200} height={67} className="h-14 w-auto object-contain" priority />
         </Link>
-
         <div className="bg-brand-card border border-brand-border rounded-2xl p-8 glow-cyan">
           <Suspense fallback={<div className="text-brand-muted text-sm text-center py-8">Loading…</div>}>
             <LoginForm />
           </Suspense>
         </div>
-
         <p className="text-center text-xs text-brand-muted mt-6">
           <Link href="/" className="hover:text-white transition-colors">← Back to LFG Technology</Link>
         </p>
