@@ -1,15 +1,12 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
 
-// In production replace this with a real database (Prisma + PostgreSQL etc.)
-// Passwords are bcrypt hashed — generate with: bcrypt.hashSync('password', 10)
+// In production replace this with a real database + bcrypt hashed passwords
 const DEMO_USERS = [
   {
     id: 'client-001',
     email: 'demo@lfgtech.com',
-    // password: "demo1234"
-    passwordHash: '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHuS',
+    password: 'demo1234',
     name: 'Demo Client',
     company: 'Demo Corp',
     qboCustomerId: 'QBO-DEMO-001',
@@ -32,7 +29,7 @@ export const authOptions: NextAuthOptions = {
         );
         if (!user) return null;
 
-        const valid = await bcrypt.compare(credentials.password, user.passwordHash);
+        const valid = credentials.password === user.password;
         if (!valid) return null;
 
         return {
