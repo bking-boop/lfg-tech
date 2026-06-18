@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Zap, Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
+import Image from 'next/image';
+import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 
 const services = [
   'Managed IT Services',
@@ -24,14 +25,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-cyan to-brand-indigo flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-lg">
-                <span className="text-brand-cyan">LFG</span>{' '}
-                <span className="text-slate-200">Technology</span>
-              </span>
+            <Link href="/" className="flex items-center mb-4">
+              <Image
+                src="/logo-white.png"
+                alt="LFG Technology Consultants"
+                width={160}
+                height={54}
+                className="h-10 w-auto object-contain"
+              />
             </Link>
             <p className="text-brand-muted text-sm leading-relaxed mb-5">
               Enterprise-grade managed IT services, cybersecurity, and cloud solutions for

@@ -4,8 +4,9 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
-  Zap, LogOut, FileText, CreditCard, AlertCircle,
+  LogOut, FileText, CreditCard, AlertCircle,
   CheckCircle2, Clock, RefreshCw, ExternalLink,
 } from 'lucide-react';
 import type { QBOInvoice } from '@/lib/qbo';
@@ -202,14 +203,14 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-brand-bg">
       <header className="bg-brand-surface border-b border-brand-border sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-cyan to-brand-indigo flex items-center justify-center">
-              <Zap className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="font-bold text-sm">
-              <span className="text-brand-cyan">LFG</span>{' '}
-              <span className="text-slate-300">Portal</span>
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo-white.png"
+              alt="LFG Technology Consultants"
+              width={120}
+              height={40}
+              className="h-8 w-auto object-contain"
+            />
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: '/portal/login' })}

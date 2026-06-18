@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Zap } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { label: 'Services', href: '/services' },
@@ -30,14 +31,15 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-cyan to-brand-indigo flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-bold text-lg tracking-tight">
-            <span className="text-brand-cyan">LFG</span>{' '}
-            <span className="text-slate-200">Technology</span>
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo-white.png"
+            alt="LFG Technology Consultants"
+            width={160}
+            height={54}
+            className="h-10 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop links */}
@@ -77,6 +79,7 @@ export default function Navbar() {
         >
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
+
       </nav>
 
       {/* Mobile menu */}

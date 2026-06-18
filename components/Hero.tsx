@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Shield, Clock, Award, TrendingUp } from 'lucide-react';
 
 const badges = [
@@ -34,16 +35,16 @@ export default function Hero() {
 
             {/* Headline */}
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-6">
-              <span className="text-white">IT That Moves</span>
+              <span className="text-white">Secure Your Future</span>
               <br />
-              <span className="text-gradient">As Fast As You Do</span>
+              <span className="text-gradient">with LFG Tech</span>
             </h1>
 
             {/* Subhead */}
             <p className="text-brand-muted text-lg leading-relaxed max-w-xl mb-10">
-              LFG Technology Consultants delivers enterprise-grade managed IT services,
-              cybersecurity, cloud migration, and 24/7 help desk support — so your team
-              can focus on growth, not downtime.
+              Cutting-edge IT solutions specializing in cybersecurity, cloud systems, and
+              managed services — tailored to your business needs so you can focus on
+              growth, not downtime.
             </p>
 
             {/* CTAs */}

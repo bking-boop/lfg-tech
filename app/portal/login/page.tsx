@@ -4,7 +4,8 @@ import { Suspense, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Zap, Eye, EyeOff, LogIn } from 'lucide-react';
+import Image from 'next/image';
+import { Eye, EyeOff, LogIn } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
@@ -116,14 +117,15 @@ export default function LoginPage() {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative w-full max-w-md">
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-cyan to-brand-indigo flex items-center justify-center">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
-          <span className="font-bold text-xl">
-            <span className="text-brand-cyan">LFG</span>{' '}
-            <span className="text-slate-200">Technology</span>
-          </span>
+        <Link href="/" className="flex justify-center mb-8">
+          <Image
+            src="/logo-white.png"
+            alt="LFG Technology Consultants"
+            width={200}
+            height={67}
+            className="h-12 w-auto object-contain"
+            priority
+          />
         </Link>
 
         <div className="bg-brand-card border border-brand-border rounded-2xl p-8 glow-cyan">
