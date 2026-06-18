@@ -121,7 +121,7 @@ export default function ContactPage() {
                       <input
                         type={type}
                         required={required}
-                        value={(form as Record<string, string>)[id]}
+                        value={(form as unknown as Record<string, string>)[id]}
                         onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
                         className="w-full bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5 text-white text-sm placeholder-brand-muted focus:outline-none focus:border-brand-cyan/60 transition-colors"
                       />
