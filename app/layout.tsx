@@ -5,13 +5,11 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'LFG Technology Consultants | Managed IT Services & Cybersecurity',
-  description:
-    'LFG Technology Consultants delivers enterprise-grade managed IT services, cybersecurity, cloud solutions, and 24/7 help desk support for businesses of all sizes. Your trusted MSP partner.',
-  keywords:
-    'managed IT services, MSP, managed service provider, cybersecurity, cloud services, IT support, help desk, NOC, backup disaster recovery, Microsoft 365, network management, IT consulting',
+  description: 'LFG Technology Consultants delivers cutting-edge managed IT services, cybersecurity, cloud solutions, and 24/7 help desk support for businesses across Canada. Your trusted MSP partner.',
+  keywords: 'managed IT services, MSP, managed service provider, cybersecurity, cloud services, IT support, help desk, NOC, backup disaster recovery, Microsoft 365, vCIO, network management, HIPAA, SOC 2, CMMC',
   openGraph: {
     title: 'LFG Technology Consultants | Managed IT Services',
-    description: 'Enterprise-grade managed IT services, cybersecurity, and cloud solutions.',
+    description: 'Cutting-edge managed IT, cybersecurity, and cloud solutions for Canadian businesses.',
     type: 'website',
   },
 };
